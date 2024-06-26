@@ -55,7 +55,7 @@ class BRAVOData(torch.utils.data.Dataset):
         return metadata
     
 
-if '__name__' == '__main__':
+if __name__ == '__main__':
     data = BRAVOData('train')
     x = data[0]
     fig, ax = plt.subplots(1,2)
