@@ -1,0 +1,11 @@
+output_dir/*
+demo/*
+*.yaml
+.idea/*
+*__pycache__*
+util/__pycache__/*
+*_ignored*
+output
+.DS_Store
+dataset/*
+otherthings/*

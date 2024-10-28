@@ -2,35 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import torch
-import torch.utils.data
+from torch.utils.data import Dataset
 
-
-class BRAVOData(torch.utils.data.Dataset):
+class BRAVOData(Dataset):
     def __init__(self, root_dir):
         self.root_dir = root_dir
         self.patients = os.listdir(self.root_dir)
         self.meta = self._load_metadata()
-
-    def __len__(self):
-        return len(self.meta)
-
-    def __getitem__(self, idx):
-        # load binary files into numpy arrays
-        input = np.fromfile(self.meta[idx][0], dtype='single')
-
-        # reshape to multidimensional arrays
-        shape = [12, 206, 178, 8]
-        input = input.reshape(shape)
-
-        input = input[np.random.choice(np.arange(shape[0]), size=2, replace=False)]
-
-        # transform to pytorch tensors and package for output
-        sample = {
-            'input': torch.tensor(input), 
-            'input_location': torch.tensor(self.meta[idx][1], dtype=torch.int),
-            'patient_index': torch.tensor(self.meta[idx][2], dtype=torch.int)
-            }
-        return sample
 
     # load metadata for this class instance
     def _load_metadata(self):
@@ -54,11 +32,25 @@ class BRAVOData(torch.utils.data.Dataset):
                     metadata.append((input_fullname, int(input_loc), pat_idx))
         return metadata
     
+    def __getitem__(self, idx):
+        # load binary files into numpy arrays
+        inputx = np.fromfile(self.meta[idx][0], dtype='single')
+
+        # reshape to multidimensional arrays
+        shape = [12, 206, 178, 8]
+        inputx = inputx.reshape(shape)
+
+        inputx = inputx[0]
+
+        return inputx
+
+    def __len__(self):
+        return len(self.meta)
+    
 
 if __name__ == '__main__':
-    data = BRAVOData('train')
-    x = data[0]
-    fig, ax = plt.subplots(1,2)
-    ax[0].imshow(torch.rot90(x['input'][0,:,:,0]), cmap='gray') # data is multicoil, so display the first (compressed) coil
-    ax[1].imshow(torch.rot90(x['input'][1,:,:,0]), cmap='gray') 
-    plt.show()
+    data = BRAVOData('dataset/train')
+    
+    imagex = data[0]
+    
+    plt.imshow(imagex[:,:,0])
