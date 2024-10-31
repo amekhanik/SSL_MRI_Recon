@@ -121,7 +121,7 @@ def get_args_parser():
                         help='url used to set up distributed training')
 
     # MAE or cross-MAE
-    parser.add_argument('--cross_mae', action='store_true', default=False)
+    # parser.add_argument('--cross_mae', action='store_true', default=False)
     parser.add_argument('--weight_fm', action='store_true', default=False,
                         help='Weight the feature maps for decoder when running cross-mae')
     parser.add_argument('--use_fm', nargs='+', type=int, default=[-1], 
@@ -203,22 +203,22 @@ def main(args):
     )
     
     # define the model
-    if args.cross_mae:
-        model = models_cross.__dict__[args.model](
-            norm_pix_loss=args.norm_pix_loss, 
-            weight_fm=args.weight_fm, 
-            decoder_depth=args.decoder_depth, 
-            use_fm=args.use_fm,
-            use_input=args.use_input,
-            self_attn=args.self_attn,
-            img_size=args.input_size,
-        )
-    else:
-        # model = models_mae.__dict__[args.model](
-        #     norm_pix_loss=args.norm_pix_loss, 
-        #     decoder_depth=args.decoder_depth,
-        # )
-        raise NotImplementedError("Only CrossMAE is supported at this time.")
+    # if args.cross_mae:
+    model = models_cross.__dict__[args.model](
+        norm_pix_loss=args.norm_pix_loss, 
+        weight_fm=args.weight_fm, 
+        decoder_depth=args.decoder_depth, 
+        use_fm=args.use_fm,
+        use_input=args.use_input,
+        self_attn=args.self_attn,
+        img_size=args.input_size,
+    )
+    # else:
+    #     # model = models_mae.__dict__[args.model](
+    #     #     norm_pix_loss=args.norm_pix_loss, 
+    #     #     decoder_depth=args.decoder_depth,
+    #     # )
+    #     raise NotImplementedError("Only CrossMAE is supported at this time.")
 
     model.to(device)
 
