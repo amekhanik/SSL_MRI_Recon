@@ -10,13 +10,13 @@ import torchvision.transforms.functional as transforms_f
 
 
 class BRAVOData(Dataset):
-    def __init__(self, root_dir, transforms_x = None):
+    def __init__(self, root_dir, transforms_x = None, mode = 'train'):
         self.root_dir = root_dir
         self.patients = os.listdir(self.root_dir)
         self.meta = self._load_metadata()
         
         self.transforms_x = transforms_x
-        
+        self.mode = mode       
 
     # load metadata for this class instance
     def _load_metadata(self):
@@ -55,14 +55,15 @@ class BRAVOData(Dataset):
         
         if self.transforms_x is not None:
             img_clean, img_corrupt = self.transforms_x(img_clean), self.transforms_x(img_corrupt)
-            
-            if torch.rand(1) > 0.5:
-                img_clean = transforms_f.hflip(img_clean)
-                img_corrupt = transforms_f.hflip(img_corrupt)
                 
-            if torch.rand(1) > 0.5:
-                img_clean = transforms_f.vflip(img_clean)
-                img_corrupt = transforms_f.vflip(img_corrupt)
+            if self.mode == 'train':
+                if torch.rand(1) > 0.5:
+                    img_clean = transforms_f.hflip(img_clean)
+                    img_corrupt = transforms_f.hflip(img_corrupt)
+                    
+                if torch.rand(1) > 0.5:
+                    img_clean = transforms_f.vflip(img_clean)
+                    img_corrupt = transforms_f.vflip(img_corrupt)
         
         return img_clean, img_corrupt
 
