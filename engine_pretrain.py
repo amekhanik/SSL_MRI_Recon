@@ -36,15 +36,15 @@ def train_one_epoch(model: torch.nn.Module,
     if log_writer is not None:
         print('log_dir: {}'.format(log_writer.log_dir))
 
-    for data_iter_step, (samples, _) in enumerate(metric_logger.log_every(data_loader, print_freq, header)):
+    for data_iter_step, (samples_clean, samples_corrupt) in enumerate(metric_logger.log_every(data_loader, print_freq, header)):
 
         # we use a per iteration (instead of per epoch) lr scheduler
         if data_iter_step % accum_iter == 0:
             lr_sched.adjust_learning_rate(optimizer, data_iter_step / len(data_loader) + epoch, args)
         
-        # samples = torch.cat((samples[0], samples[1]), dim=0) 
-        # samples = samples.to(device, non_blocking=True)
-        print("hey there. Samples size is: {}".format(samples.shape))
+        samples = torch.cat((samples_clean, samples_corrupt), dim=0) 
+        samples = samples.to(device, non_blocking=True)
+        # print("hey there. Samples size is: {}".format(samples.shape))
         break
         loss = model(samples, mask_ratio=args.mask_ratio, kept_mask_ratio=args.kept_mask_ratio)
 
