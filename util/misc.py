@@ -71,7 +71,7 @@ class SmoothedValue(object):
 
     @property
     def max(self):
-        return max(self.deque)
+        return max(self.deque, default=0)
 
     @property
     def value(self):
