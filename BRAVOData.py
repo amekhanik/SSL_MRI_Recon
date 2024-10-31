@@ -98,7 +98,10 @@ if __name__ == '__main__':
 
     data_loader_train = dataloader_cls(
         dataset_train, sampler=sampler_train,
-        batch_size=1,
+        batch_size=2,
         num_workers=0,
         drop_last=True,
     )
+    
+    samples = next(iter(data_loader_train))
+    samples = torch.cat((samples[0], samples[1]), dim=0) 

@@ -323,20 +323,4 @@ mae_vit_small_patch16 = mae_vit_small_patch16_dec512d8b
 if __name__ == '__main__':    
     model_of_i = mae_vit_small_patch16_dec512d8b()
     
-    from BRAVOData import BRAVOData
-    import torchvision.transforms as transforms
- 
-    # simple augmentation
-    transform_try = transforms.Compose([
-            transforms.Lambda(lambda x: x.permute(2, 0, 1)),  # Move to (channels, height, width)
-            transforms.Resize((224, 224)),
-            transforms.Normalize(mean=[3.0892, 1.6437, 1.3494, 0.9318, 1.0241, 0.6993, 0.7459, 0.7565],
-                                 std=[4.4823, 2.6962, 2.1895, 1.4849, 1.6206, 1.1844, 1.1394, 1.1681])
-            ])
-    
-    data = BRAVOData('dataset/train', transforms_x = transform_try)
-    
-    imagex_clean, imagex_corrupt = data[2]
-
-    y = model_of_i.patchify(imagex_clean.unsqueeze(0))
-    
+    x = torch.rand(4, 8, 224, 224)
