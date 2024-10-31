@@ -32,10 +32,11 @@ import util.misc as misc
 from util.misc import NativeScalerWithGradNormCount as NativeScaler
 from transformer_utils import handle_flash_attn
 
-import models_mae
 import models_cross
 
 from engine_pretrain import train_one_epoch
+
+from BRAVOData import BRAVOData
 
 
 def get_args_parser():
@@ -47,7 +48,7 @@ def get_args_parser():
                         help='Accumulate gradient iterations (for increasing the effective batch size under memory constraints)')
 
     # Model parameters
-    parser.add_argument('--model', default='mae_vit_large_patch16', type=str, metavar='MODEL',
+    parser.add_argument('--model', default='mae_vit_small_patch16', type=str, metavar='MODEL',
                         help='Name of model to train')
 
     parser.add_argument('--input_size', default=224, type=int,
@@ -155,13 +156,23 @@ def main(args):
     ## TODO: Change this - and good to go
     
     # simple augmentation
-    transform_train = transforms.Compose([
-            transforms.RandomResizedCrop(args.input_size, scale=(0.2, 1.0), interpolation=3),  # 3 is bicubic
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
-    dataset_train = datasets.ImageFolder(os.path.join(args.data_path, 'train'), transform=transform_train)
-    print(dataset_train)
+    # transform_train = transforms.Compose([
+    #         transforms.RandomResizedCrop(args.input_size, scale=(0.2, 1.0), interpolation=3),  # 3 is bicubic
+    #         transforms.RandomHorizontalFlip(),
+    #         transforms.ToTensor(),
+    #         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+    # dataset_train = datasets.ImageFolder(os.path.join(args.data_path, 'train'), transform=transform_train)
+    # print(dataset_train)
+    
+    # simple augmentation
+    transforms_train_n_eval = transforms.Compose([
+                                    transforms.Lambda(lambda x: x.permute(2, 0, 1)),  # Move to (channels, height, width)
+                                    transforms.Resize((224, 224)),
+                                    transforms.Normalize(mean=[3.0892, 1.6437, 1.3494, 0.9318, 1.0241, 0.6993, 0.7459, 0.7565],
+                                                         std=[4.4823, 2.6962, 2.1895, 1.4849, 1.6206, 1.1844, 1.1394, 1.1681])
+                                    ])
+    
+    dataset_train = BRAVOData('dataset/train', transforms_x=transforms_train_n_eval, mode = 'train')
 
     ###########################################################################
 
@@ -203,10 +214,11 @@ def main(args):
             img_size=args.input_size,
         )
     else:
-        model = models_mae.__dict__[args.model](
-            norm_pix_loss=args.norm_pix_loss, 
-            decoder_depth=args.decoder_depth,
-        )
+        # model = models_mae.__dict__[args.model](
+        #     norm_pix_loss=args.norm_pix_loss, 
+        #     decoder_depth=args.decoder_depth,
+        # )
+        raise NotImplementedError("Only CrossMAE is supported at this time.")
 
     model.to(device)
 

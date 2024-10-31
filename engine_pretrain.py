@@ -41,7 +41,8 @@ def train_one_epoch(model: torch.nn.Module,
         # we use a per iteration (instead of per epoch) lr scheduler
         if data_iter_step % accum_iter == 0:
             lr_sched.adjust_learning_rate(optimizer, data_iter_step / len(data_loader) + epoch, args)
-
+        
+        samples = torch.cat((samples[0], samples[1]), dim=0) 
         samples = samples.to(device, non_blocking=True)
 
         loss = model(samples, mask_ratio=args.mask_ratio, kept_mask_ratio=args.kept_mask_ratio)
