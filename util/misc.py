@@ -29,7 +29,7 @@ class SmoothedValue(object):
     window or the global series average.
     """
 
-    def __init__(self, window_size=5, fmt=None):
+    def __init__(self, window_size=20, fmt=None):
         if fmt is None:
             fmt = "{median:.4f} ({global_avg:.4f})"
         self.deque = deque(maxlen=window_size)
@@ -71,15 +71,12 @@ class SmoothedValue(object):
 
     @property
     def max(self):
-        return max(self.deque, default=0)
+        return max(self.deque)
 
     @property
     def value(self):
-        if self.deque is not None:
-            return self.deque[-1]
-        else:
-            return 0
-        
+        return self.deque[-1]
+
     def __str__(self):
         return self.fmt.format(
             median=self.median,
