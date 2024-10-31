@@ -75,8 +75,11 @@ class SmoothedValue(object):
 
     @property
     def value(self):
-        return self.deque[-1]
-
+        if self.deque is not None:
+            return self.deque[-1]
+        else:
+            return 0
+        
     def __str__(self):
         return self.fmt.format(
             median=self.median,
