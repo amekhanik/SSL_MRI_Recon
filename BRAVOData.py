@@ -84,11 +84,11 @@ if __name__ == '__main__':
     
     dataset_train = BRAVOData('dataset/train', transforms_x = transform_try)
     
-    imagex_clean, imagex_corrupt = dataset_train[2]
+    # imagex_clean, imagex_corrupt = dataset_train[2]
     
-    plt.imshow(imagex_clean[0,:,:])
-    plt.pause(0.1)
-    plt.imshow(imagex_corrupt[0,:,:])
+    # plt.imshow(imagex_clean[0,:,:])
+    # plt.pause(0.1)
+    # plt.imshow(imagex_corrupt[0,:,:])
     
     ###%
     
@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
     data_loader_train = dataloader_cls(
         dataset_train, sampler=sampler_train,
-        batch_size=2,
+        batch_size=1,
         num_workers=0,
         drop_last=True,
     )

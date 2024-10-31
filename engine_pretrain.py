@@ -44,7 +44,7 @@ def train_one_epoch(model: torch.nn.Module,
         
         samples = torch.cat((samples[0], samples[1]), dim=0) 
         samples = samples.to(device, non_blocking=True)
-
+        print("hey there. Samples size is: {}".format(samples.shape))
         loss = model(samples, mask_ratio=args.mask_ratio, kept_mask_ratio=args.kept_mask_ratio)
 
         loss_value = loss.item()
