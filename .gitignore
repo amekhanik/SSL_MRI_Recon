@@ -9,3 +9,4 @@ output
 .DS_Store
 dataset/*
 otherthings/*
+pretrained_weights/*
