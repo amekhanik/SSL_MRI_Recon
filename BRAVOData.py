@@ -93,16 +93,16 @@ if __name__ == '__main__':
     
     ###%
     
-    from timm.data.loader import MultiEpochsDataLoader
-    sampler_train = torch.utils.data.RandomSampler(dataset_train)
-    dataloader_cls = MultiEpochsDataLoader
+    # from timm.data.loader import MultiEpochsDataLoader
+    # sampler_train = torch.utils.data.RandomSampler(dataset_train)
+    # dataloader_cls = MultiEpochsDataLoader
 
-    data_loader_train = dataloader_cls(
-        dataset_train, sampler=sampler_train,
-        batch_size=2,
-        num_workers=0,
-        drop_last=True,
-    )
+    # data_loader_train = dataloader_cls(
+    #     dataset_train, sampler=sampler_train,
+    #     batch_size=2,
+    #     num_workers=0,
+    #     drop_last=True,
+    # )
     
-    samples = next(iter(data_loader_train))
-    samples = torch.cat((samples[0], samples[1]), dim=0) 
+    # samples = next(iter(data_loader_train))
+    # samples = torch.cat((samples[0], samples[1]), dim=0) 

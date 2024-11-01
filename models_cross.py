@@ -272,13 +272,16 @@ class MaskedAutoencoderViT(nn.Module):
         loss = loss.mean()
         return loss
 
-    def forward(self, imgs, mask_ratio=0.75, kept_mask_ratio=0.5):
+    def forward(self, imgs, mask_ratio=0.75, kept_mask_ratio=0.5, debug = False):
         with torch.cuda.amp.autocast():
             latent, mask, ids_restore, coords = self.forward_encoder(imgs, mask_ratio, kept_mask_ratio)
             pred, combined = self.forward_decoder(latent, mask, ids_restore, coords, mask_ratio, kept_mask_ratio)  # [N, L, p*p*3]
             loss = self.forward_loss(imgs, pred, mask, coords)
-            # return loss, pred, mask
-            return loss
+            if debug == False:
+                return loss
+            else:
+                return loss, pred, mask
+            
 
 
 def mae_vit_small_patch16_dec512d8b(**kwargs):
